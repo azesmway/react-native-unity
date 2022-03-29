@@ -1,25 +1,18 @@
-import * as React from 'react';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Main from './Main';
+import Unity from './Unity';
 
-import { StyleSheet, View } from 'react-native';
-import { ReactNativeUnityView } from '@azesmway/react-native-unity';
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ReactNativeUnityViewManager color="#32a852" style={styles.box} />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen name="Unity" component={Unity} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});

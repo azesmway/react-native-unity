@@ -1,26 +1,57 @@
+import React from 'react';
 import {
   requireNativeComponent,
   UIManager,
+  findNodeHandle,
   Platform,
-  ViewStyle,
+  NativeSyntheticEvent,
 } from 'react-native';
 
-const LINKING_ERROR =
-  `The package '@azesmway/react-native-unity' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
+interface UnityMessage {
+  message: string;
+}
 
-type ReactNativeUnityProps = {
-  color: string;
-  style: ViewStyle;
+type ReactNativeUnityViewProps = {
+  onUnityMessage?: (event: NativeSyntheticEvent<UnityMessage>) => void;
 };
 
 const ComponentName = 'ReactNativeUnityView';
 
-export const ReactNativeUnityView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<ReactNativeUnityProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
+const ReactNativeUnityView =
+  requireNativeComponent<ReactNativeUnityViewProps>(ComponentName);
+
+export default class UnityView extends React.Component<ReactNativeUnityViewProps> {
+  static defaultProps = {};
+
+  constructor(props: any) {
+    super(props);
+  }
+
+  public postMessage(gameObject: string, methodName: string, message: string) {
+    UIManager.dispatchViewManagerCommand(
+      findNodeHandle(this),
+      this.getCommand('postMessage'),
+      [gameObject, methodName, message]
+    );
+  }
+
+  private getCommand(cmd: string): any {
+    if (Platform.OS === 'ios') {
+      return UIManager.getViewManagerConfig('ReactNativeUnityView').Commands[
+        cmd
+      ];
+    } else {
+      return cmd;
+    }
+  }
+
+  private getProps() {
+    return {
+      ...this.props,
+    };
+  }
+
+  public render() {
+    return <ReactNativeUnityView {...this.getProps()} />;
+  }
+}
