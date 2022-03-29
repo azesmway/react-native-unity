@@ -44,7 +44,8 @@
   },
   "homepage": "https://github.com/azesmway/react-native-unity#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
