@@ -11,10 +11,6 @@
 RCT_EXPORT_MODULE(ReactNativeUnityView)
 RCT_EXPORT_VIEW_PROPERTY(onUnityMessage, RCTBubblingEventBlock)
 
-- (NSArray<NSString *> *)supportedEvents {
-    return @[@"onUnityMessage"];
-}
-
 - (UIView *)view
 {
     ReactNativeUnityView *unity = [ReactNativeUnityView new];
@@ -40,12 +36,16 @@ RCT_EXPORT_VIEW_PROPERTY(onUnityMessage, RCTBubblingEventBlock)
 RCT_EXPORT_METHOD(postMessage:(nonnull NSNumber*) reactTag gameObject:(NSString*_Nonnull) gameObject methodName:(NSString*_Nonnull) methodName message:(NSString*_Nonnull) message) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
         ReactNativeUnityView *view = (ReactNativeUnityView*) viewRegistry[reactTag];
-        if (!view || ![view isKindOfClass:[UnityPlayTsView class]]) {
+        if (!view || ![view isKindOfClass:[ReactNativeUnityView class]]) {
             RCTLogError(@"Cannot find NativeView with tag #%@", reactTag);
             return;
         }
         [ReactNativeUnityView UnityPostMessage:(NSString *)gameObject methodName:(NSString *)methodName message:(NSString *)message];
     }];
+}
+
+- (NSArray<NSString *> *)supportedEvents {
+    return @[@"onUnityMessage"];
 }
 
 @end
