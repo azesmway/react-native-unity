@@ -1,10 +1,9 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTView.h>
 #import <React/RCTEventDispatcher.h>
-#import <React/RCTBridgeModule.h>
-#import <UnityFramework/NativeCallProxy.h>
+#include <UnityFramework/NativeCallProxy.h>
 
-@interface ReactNativeUnityView : RCTView <RCTBridgeModule, NativeCallsProtocol>
+@interface ReactNativeUnityView : RCTView <NativeCallsProtocol>
 
 @property (nonatomic, strong) UIView* _Nullable uView;
 
@@ -12,5 +11,6 @@
 
 + (void)UnityPostMessage:(NSString* _Nonnull )gameObject methodName:(NSString* _Nonnull)methodName message:(NSString* _Nonnull) message;
 + (void)unloadUnity;
++ (void)pauseUnity:(BOOL * _Nonnull)pause;
 
 @end

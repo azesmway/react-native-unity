@@ -1,10 +1,11 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTViewManager.h>
 #import <React/RCTUIManager.h>
+#import <React/RCTBridgeModule.h>
 #import <ReactNativeUnityView.h>
-#import <UnityFramework/NativeCallProxy.h>
+#include <UnityFramework/UnityFramework.h>
 
-@interface ReactNativeUnityViewManager : RCTViewManager
+@interface ReactNativeUnityViewManager : RCTViewManager <RCTBridgeModule>
 @end
 
 @implementation ReactNativeUnityViewManager
@@ -14,7 +15,7 @@ RCT_EXPORT_VIEW_PROPERTY(onUnityMessage, RCTBubblingEventBlock)
 
 - (UIView *)view
 {
-    ReactNativeUnityView *unity = [ReactNativeUnityView new];
+    ReactNativeUnityView *unity = [[ReactNativeUnityView alloc] init];
     UIWindow * main = [[[UIApplication sharedApplication] delegate] window];
 
     if(main != nil) {
@@ -42,6 +43,17 @@ RCT_EXPORT_METHOD(postMessage:(nonnull NSNumber*) reactTag gameObject:(NSString*
             return;
         }
         [ReactNativeUnityView UnityPostMessage:(NSString *)gameObject methodName:(NSString *)methodName message:(NSString *)message];
+    }];
+}
+
+RCT_EXPORT_METHOD(pauseUnity:(nonnull NSNumber*) reactTag pause:(BOOL * _Nonnull)pause) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        ReactNativeUnityView *view = (ReactNativeUnityView*) viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:[ReactNativeUnityView class]]) {
+            RCTLogError(@"Cannot find NativeView with tag #%@", reactTag);
+            return;
+        }
+        [ReactNativeUnityView pauseUnity:(BOOL * _Nonnull)pause];
     }];
 }
 

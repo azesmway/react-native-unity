@@ -104,6 +104,7 @@ export default Unity;
 `sendMessageToGOWithName:(const char*)goName functionName:(const char*)name message:(const char*)msg;`, more details can be found in the [documentation](https://docs.unity3d.com/2021.1/Documentation/Manual/UnityasaLibrary-iOS.html)
 
 - `unloadUnity()` - the Unity is unloaded automatically when the react-native component is unmounted, but if you want to unload the Unity, you can call this method
+- `pauseUnity?: (pause: boolean)` - pause the Unity
 
 ## Contributing
 

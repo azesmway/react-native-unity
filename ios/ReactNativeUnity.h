@@ -1,11 +1,13 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 #include <mach-o/ldsyms.h>
+#include <UnityFramework/UnityFramework.h>
 
-@protocol RNUnityAppController <UIApplicationDelegate>
+@protocol RNUnityAppController <UIApplicationDelegate, UnityFrameworkListener>
 
 - (UIWindow *)window;
 - (UIView *)rootView;
+- (UnityView *)unityView;
 
 @end
 
@@ -16,6 +18,10 @@
 
 - (void)setExecuteHeader:(const typeof(_mh_execute_header)*)header;
 - (void)setDataBundleId:(const char*)bundleId;
+
+- (void)registerFrameworkListener:(id<RNUnityFramework>)obj;
+- (void)unregisterFrameworkListener:(id<RNUnityFramework>)obj;
+- (void)frameworkWarmup:(int)argc argv:(char*[])argv;
 
 - (void)runEmbeddedWithArgc:(int)argc argv:(char*[])argv appLaunchOpts:(NSDictionary*)appLaunchOpts;
 

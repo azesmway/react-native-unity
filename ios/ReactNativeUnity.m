@@ -28,10 +28,11 @@ static id<RNUnityFramework> Unity_ufw;
     if ([bundle isLoaded] == false) [bundle load];
 
     id<RNUnityFramework> framework = [bundle.principalClass getInstance];
+
     if (![framework appController]) {
-        // unity is not initialized
         [framework setExecuteHeader: &_mh_execute_header];
     }
+
     [framework setDataBundleId: [bundle.bundleIdentifier cStringUsingEncoding:NSUTF8StringEncoding]];
 
     unsigned count = (int) [[[NSProcessInfo processInfo] arguments] count];
@@ -46,6 +47,7 @@ static id<RNUnityFramework> Unity_ufw;
     [framework runEmbeddedWithArgc: gArgc argv: array appLaunchOpts: applaunchOptions];
 
     [self setUfw:framework];
+    [framework registerFrameworkListener:self.ufw];
 
     return self.ufw;
 }

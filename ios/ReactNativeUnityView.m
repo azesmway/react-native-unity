@@ -24,15 +24,9 @@ NSDictionary* appLaunchOpts;
     [self insertSubview:_uView atIndex:0];
 }
 
-- (void)dealloc
++ (void)pauseUnity:(BOOL * _Nonnull)pause
 {
-    UIWindow * main = [[[UIApplication sharedApplication] delegate] window];
-    if(main != nil) {
-        [main makeKeyAndVisible];
-        if ([ReactNativeUnity ufw]) {
-            [[ReactNativeUnity ufw] unloadApplication];
-        }
-    }
+    [[ReactNativeUnity ufw] pause:pause];
 }
 
 + (void)unloadUnity
@@ -41,6 +35,7 @@ NSDictionary* appLaunchOpts;
     if(main != nil) {
         [main makeKeyAndVisible];
         if ([ReactNativeUnity ufw]) {
+            [[ReactNativeUnity ufw] unregisterFrameworkListener:[ReactNativeUnity ufw]];
             [[ReactNativeUnity ufw] unloadApplication];
         }
     }
