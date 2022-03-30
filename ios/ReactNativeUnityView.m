@@ -29,7 +29,20 @@ NSDictionary* appLaunchOpts;
     UIWindow * main = [[[UIApplication sharedApplication] delegate] window];
     if(main != nil) {
         [main makeKeyAndVisible];
-        [[ReactNativeUnity ufw] unloadApplication];
+        if ([ReactNativeUnity ufw]) {
+            [[ReactNativeUnity ufw] unloadApplication];
+        }
+    }
+}
+
++ (void)unloadUnity
+{
+    UIWindow * main = [[[UIApplication sharedApplication] delegate] window];
+    if(main != nil) {
+        [main makeKeyAndVisible];
+        if ([ReactNativeUnity ufw]) {
+            [[ReactNativeUnity ufw] unloadApplication];
+        }
     }
 }
 
