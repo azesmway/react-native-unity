@@ -100,7 +100,9 @@ export default Unity;
 - `onUnityMessage?: (event: NativeSyntheticEvent)` - receives a message from a Unity
 
 #### Methods
-- `postMessage(gameObject, methodName, message)` - sends a message to the unit
+- `postMessage(gameObject, methodName, message)` - sends a message to the Unity. **FOR IOS:** The native method of unity is used to send a message
+`sendMessageToGOWithName:(const char*)goName functionName:(const char*)name message:(const char*)msg;`, more details can be found in the [documentation](https://docs.unity3d.com/2021.1/Documentation/Manual/UnityasaLibrary-iOS.html)
+
 - `unloadUnity()` - the Unity is unloaded automatically when the react-native component is unmounted, but if you want to unload the Unity, you can call this method
 
 ## Contributing

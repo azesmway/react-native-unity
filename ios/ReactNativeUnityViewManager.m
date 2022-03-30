@@ -2,6 +2,7 @@
 #import <React/RCTViewManager.h>
 #import <React/RCTUIManager.h>
 #import <ReactNativeUnityView.h>
+#import <UnityFramework/NativeCallProxy.h>
 
 @interface ReactNativeUnityViewManager : RCTViewManager
 @end
