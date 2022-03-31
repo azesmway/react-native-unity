@@ -18,6 +18,7 @@ const Unity = () => {
   useEffect(() => {
     setTimeout(() => {
       if (unityRef && unityRef.current) {
+        // @ts-ignore
         unityRef.current.postMessage(
           message.gameObject,
           message.methodName,
@@ -29,6 +30,7 @@ const Unity = () => {
 
   return (
     <UnityView
+      // @ts-ignore
       ref={unityRef}
       style={{ flex: 1 }}
       onUnityMessage={(result) =>

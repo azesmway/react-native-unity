@@ -54,6 +54,9 @@ public class ButtonBehavior : MonoBehaviour
 7. Add `Unity-iPhone.xcodeproj` to your XCode: `File` -> `Add Files to [project_name]...` -> `[project_root]/unity/builds/ios/Unity-iPhone.xcodeproj`
 8. Add `UnityFramework.framework` to `Frameworks, Libraries, and Embedded Content`
 
+### Android
+Under development...
+
 ### Usage
 
 ```js

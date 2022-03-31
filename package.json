@@ -35,7 +35,8 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "unity"
   ],
   "repository": "https://github.com/azesmway/react-native-unity",
   "author": "azesm <azesm@me.com> (https://github.com/azesmway)",
