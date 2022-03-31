@@ -13,6 +13,7 @@
     "android",
     "ios",
     "cpp",
+    "unity",
     "react-native-unity.podspec",
     "!lib/typescript/example",
     "!android/build",
@@ -24,7 +25,7 @@
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
