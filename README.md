@@ -46,13 +46,12 @@ public class ButtonBehavior : MonoBehaviour
 ### iOS
 
 1. Build Unity app to `[project_root]/unity/builds/ios`
-2. Open `unity/builds/ios/Unity-iPhone.xcodeproj` in XCode
-3. Select Data folder and set a checkbox in the "Target Membership" section to "UnityFramework"
-4. You need to select the NativeCallProxy.h inside the Libraries/Plugins/iOS folder of the Unity-iPhone project and change UnityFramework’s target membership from Project to Public. Don’t forget this step! https://miro.medium.com/max/1400/1*6v9KfxzR6olQNioUp_dFQQ.png
-5. Build iOS project to iphone and test Unity App
-6. Open your react-native project in XCode
-7. Add `Unity-iPhone.xcodeproj` to your XCode: `File` -> `Add Files to [project_name]...` -> `[project_root]/unity/builds/ios/Unity-iPhone.xcodeproj`
-8. Add `UnityFramework.framework` to `Frameworks, Libraries, and Embedded Content`
+2. Add `Unity-iPhone.xcodeproj` to your XCode: press the right mouse button in the Left Navigator XCode -> `Add Files to [project_name]...` -> `[project_root]/unity/builds/ios/Unity-iPhone.xcodeproj`
+3. Add `UnityFramework.framework` to `General` / section `Frameworks, Libraries, and Embedded Content`
+4. Select Data folder and set a checkbox in the "Target Membership" section to "UnityFramework"
+5. You need to select the NativeCallProxy.h inside the `Unity-iPhone/Libraries/Plugins/iOS` folder of the Unity-iPhone project and change UnityFramework’s target membership from Project to Public. Don’t forget this step! https://miro.medium.com/max/1400/1*6v9KfxzR6olQNioUp_dFQQ.png
+6. In `Build Phases` remove UnityFramework.framework from `Linked Binary With Libraries`
+7. In Build Phases move Embedded Frameworks before Compile Sources ( drag and drop )
 
 ### Android
 Under development...
