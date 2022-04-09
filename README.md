@@ -58,6 +58,10 @@ public class ButtonBehavior : MonoBehaviour
 ## Android
 Under development...
 
+# Know issues
+
+- On IOS the Unity view is waiting for a parent with dimensions greater than 0 (from RN side). Please take care of this because if it is not the case, your app will crash with the native message `MTLTextureDescriptor has width of zero`.
+
 # Usage
 
 ## Sample code
@@ -88,13 +92,17 @@ const Unity = () => {
   }, []);
 
   return (
-    <UnityView
-      ref={unityRef}
-      style={{ flex: 1 }}
-      onUnityMessage={(result) =>
-        console.log('onUnityMessage', result.nativeEvent.message)
-      }
-    />
+    // If you wrap your UnityView inside a parent, please take care to set dimensions to it (with `flex:1` for example).
+    // See the `Know issues` part in the README.
+    <View style={{flex: 1}}> 
+      <UnityView
+        ref={unityRef}
+        style={{ flex: 1 }}
+        onUnityMessage={(result) =>
+          console.log('onUnityMessage', result.nativeEvent.message)
+        }
+      />
+    </View>
   );
 };
 
