@@ -1,8 +1,10 @@
-## @azesmway/react-native-unity
+# @azesmway/react-native-unity
 
 The plugin that allows you to embed a UNITY project into the react native as a full-fledged component
 
-### Installation
+# Installation
+
+## RN
 
 ```sh
 npm install @azesmway/react-native-unity
@@ -12,7 +14,7 @@ or
 yarn add @azesmway/react-native-unity
 ```
 
-### UNITY
+## Unity
 
 1. Copy from folder "unity" to <Unity_Project_Name> folder and rebuild unity project.
 
@@ -43,7 +45,7 @@ public class ButtonBehavior : MonoBehaviour
 }
 ```
 
-### iOS
+## iOS
 
 1. Build Unity app to `[project_root]/unity/builds/ios`
 2. Add `Unity-iPhone.xcodeproj` to your XCode: press the right mouse button in the Left Navigator XCode -> `Add Files to [project_name]...` -> `[project_root]/unity/builds/ios/Unity-iPhone.xcodeproj`
@@ -53,10 +55,16 @@ public class ButtonBehavior : MonoBehaviour
 6. In `Build Phases` remove UnityFramework.framework from `Linked Binary With Libraries`
 7. In Build Phases move Embedded Frameworks before Compile Sources ( drag and drop )
 
-### Android
+## Android
 Under development...
 
-### Usage
+# Know issues
+
+- On IOS the Unity view is waiting for a parent with dimensions greater than 0 (from RN side). Please take care of this because if it is not the case, your app will crash with the native message `MTLTextureDescriptor has width of zero`.
+
+# Usage
+
+## Sample code
 
 ```js
 import React, { useRef, useEffect } from 'react';
@@ -84,13 +92,17 @@ const Unity = () => {
   }, []);
 
   return (
-    <UnityView
-      ref={unityRef}
-      style={{ flex: 1 }}
-      onUnityMessage={(result) =>
-        console.log('onUnityMessage', result.nativeEvent.message)
-      }
-    />
+    // If you wrap your UnityView inside a parent, please take care to set dimensions to it (with `flex:1` for example).
+    // See the `Know issues` part in the README.
+    <View style={{flex: 1}}> 
+      <UnityView
+        ref={unityRef}
+        style={{ flex: 1 }}
+        onUnityMessage={(result) =>
+          console.log('onUnityMessage', result.nativeEvent.message)
+        }
+      />
+    </View>
   );
 };
 
@@ -98,20 +110,20 @@ export default Unity;
 
 ```
 
-#### Props
+## Props
 - `onUnityMessage?: (event: NativeSyntheticEvent)` - receives a message from a Unity
 
-#### Methods
+## Methods
 - `postMessage(gameObject, methodName, message)` - sends a message to the Unity. **FOR IOS:** The native method of unity is used to send a message
 `sendMessageToGOWithName:(const char*)goName functionName:(const char*)name message:(const char*)msg;`, more details can be found in the [documentation](https://docs.unity3d.com/2021.1/Documentation/Manual/UnityasaLibrary-iOS.html)
 
 - `unloadUnity()` - the Unity is unloaded automatically when the react-native component is unmounted, but if you want to unload the Unity, you can call this method
 - `pauseUnity?: (pause: boolean)` - pause the Unity
 
-## Contributing
+# Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
-## License
+# License
 
 MIT
