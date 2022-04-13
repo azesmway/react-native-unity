@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">example</string>
+    <string name="game_view_content_description">Unity view</string>
 </resources>

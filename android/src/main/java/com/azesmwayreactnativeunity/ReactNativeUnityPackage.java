@@ -17,6 +17,6 @@ public class ReactNativeUnityPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList(new ReactNativeUnityViewManager());
+        return Arrays.<ViewManager>asList(new ReactNativeUnityViewManager(reactContext));
     }
 }

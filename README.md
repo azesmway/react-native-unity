@@ -30,17 +30,32 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class NativeAPI {
-    [DllImport("__Internal")]
-    public static extern void sendMessageToMobileApp(string message);
+#if UNITY_IOS && !UNITY_EDITOR
+  [DllImport("__Internal")]
+  public static extern void sendMessageToMobileApp(string message);
+#endif
 }
 
 public class ButtonBehavior : MonoBehaviour
 {
-    public void ButtonPressed()
+  public void ButtonPressed()
+  {
+    if (Application.platform == RuntimePlatform.Android)
     {
-        NativeAPI.sendMessageToMobileApp("The button has been tapped!");
+      using (AndroidJavaClass jc = new AndroidJavaClass("com.azesmwayreactnativeunity.ReactNativeUnityViewManager"))
+      {
+        jc.CallStatic("sendMessageToMobileApp", "The button has been tapped!");
+      }
     }
+    else if (Application.platform == RuntimePlatform.IPhonePlayer)
+    {
+#if UNITY_IOS && !UNITY_EDITOR
+      NativeAPI.sendMessageToMobileApp("The button has been tapped!");
+#endif
+    }
+  }
 }
+
 ```
 
 ### iOS
@@ -54,7 +69,33 @@ public class ButtonBehavior : MonoBehaviour
 7. In Build Phases move Embedded Frameworks before Compile Sources ( drag and drop )
 
 ### Android
-Under development...
+
+1. Build Unity app to `[project_root]/unity/builds/android`
+2. Add the following lines to `android/settings.gradle`:
+   ```gradle
+   include ':unityLibrary'
+   project(':unityLibrary').projectDir=new File('..\\unity\\builds\\android\\unityLibrary')
+   ```
+3. Add into `android/build.gradle`
+    ```gradle
+    allprojects {
+      repositories {
+        // this
+        flatDir {
+            dirs "${project(':unityLibrary').projectDir}/libs"
+        }
+    // ...
+    ```
+4. Add into `android/gradle.properties`
+    ```gradle
+    unityStreamingAssets=.unity3d
+    ```
+5. Add strings to ``android/app/src/main/res/values/strings.xml``
+
+    ```javascript
+    <string name="game_view_content_description">Game view</string>
+    ```
+6. Remove `<intent-filter>...</intent-filter>` from ``<project_name>/unity/builds/android/unityLibrary/src/main/AndroidManifest.xml`` at unityLibrary to leave only integrated version.
 
 ### Usage
 
