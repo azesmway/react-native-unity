@@ -1,4 +1,5 @@
 import React, {useRef, useEffect} from 'react';
+import {View} from 'react-native';
 import UnityView from '@azesmway/react-native-unity';
 
 interface IMessage {
@@ -28,13 +29,17 @@ const Unity = () => {
   }, []);
 
   return (
-    <UnityView
-      ref={unityRef}
-      style={{flex: 1}}
-      onUnityMessage={result =>
-        console.log('onUnityMessage', result.nativeEvent.message)
-      }
-    />
+    // If you wrap your UnityView inside a parent, please take care to set dimensions to it (with `flex:1` for example).
+    // See the `Know issues` part in the README.
+    <View style={{flex: 1}}> 
+      <UnityView
+        ref={unityRef}
+        style={{flex: 1}}
+        onUnityMessage={result =>
+          console.log('onUnityMessage', result.nativeEvent.message)
+        }
+      />
+    </View>
   );
 };
 
