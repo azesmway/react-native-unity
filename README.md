@@ -101,6 +101,7 @@ public class ButtonBehavior : MonoBehaviour
 
 # Know issues
 
+- Work only on real devices.
 - On IOS the Unity view is waiting for a parent with dimensions greater than 0 (from RN side). Please take care of this because if it is not the case, your app will crash with the native message `MTLTextureDescriptor has width of zero`.
 
 # Usage
