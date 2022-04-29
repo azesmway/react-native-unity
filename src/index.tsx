@@ -5,6 +5,7 @@ import {
   findNodeHandle,
   Platform,
   NativeSyntheticEvent,
+  ViewStyle,
 } from 'react-native';
 
 interface UnityMessage {
@@ -13,6 +14,7 @@ interface UnityMessage {
 
 type ReactNativeUnityViewProps = {
   onUnityMessage?: (event: NativeSyntheticEvent<UnityMessage>) => void;
+  style?: ViewStyle;
 };
 
 const ComponentName = 'ReactNativeUnityView';
