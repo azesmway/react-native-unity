@@ -1,7 +1,6 @@
 package com.azesmwayreactnativeunity;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;

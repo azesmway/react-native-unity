@@ -1,126 +1,76 @@
 package com.azesmwayreactnativeunity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.PixelFormat;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.FrameLayout;
+import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.facebook.react.views.view.ReactViewGroup;
 import com.unity3d.player.UnityPlayer;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import java.util.Objects;
 
-public class ReactNativeUnity {
-    private static UnityPlayer unityPlayer;
-    public static boolean _isUnityReady;
-    public static boolean _isUnityPaused;
-    public static boolean _fullScreen;
+@SuppressLint("ViewConstructor")
+public class ReactNativeUnityView extends FrameLayout {
+    private UnityPlayer view;
+    public boolean keepPlayerMounted = false;
 
-    public static UnityPlayer getPlayer() {
-        if (!_isUnityReady) {
-            return null;
-        }
-        return unityPlayer;
+    public ReactNativeUnityView(Context context) {
+        super(context);
     }
 
-    public static boolean isUnityReady() {
-        return _isUnityReady;
+    public void setUnityPlayer(UnityPlayer player) {
+        this.view = player;
+        ReactNativeUnity.addUnityViewToGroup(this);
     }
 
-    public static boolean isUnityPaused() {
-        return _isUnityPaused;
-    }
-
-    public static void createPlayer(final Activity activity, final CreateCallback callback) {
-        if (unityPlayer != null) {
-            callback.onReady();
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (view == null) {
             return;
         }
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                activity.getWindow().setFormat(PixelFormat.RGBA_8888);
-                int flag = activity.getWindow().getAttributes().flags;
-                boolean fullScreen = false;
-                if ((flag & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
-                    fullScreen = true;
-                }
+        view.windowFocusChanged(hasWindowFocus);
 
-                unityPlayer = new UnityPlayer(activity);
-
-                try {
-                    // wait a moment. fix unity cannot start when startup.
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                }
-
-                // start unity
-                addUnityViewToBackground();
-                unityPlayer.windowFocusChanged(true);
-                unityPlayer.requestFocus();
-                unityPlayer.resume();
-
-                // restore window layout
-                if (!fullScreen) {
-                    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                    activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                }
-                _isUnityReady = true;
-                callback.onReady();
-            }
-        });
-    }
-
-    public static void pause() {
-        if (unityPlayer != null) {
-            unityPlayer.pause();
-            _isUnityPaused = true;
-        }
-    }
-
-    public static void resume() {
-        if (unityPlayer != null) {
-            unityPlayer.resume();
-            _isUnityPaused = false;
-        }
-    }
-
-    public static void unload() {
-        if (unityPlayer != null) {
-            unityPlayer.unload();
-            _isUnityPaused = false;
-        }
-    }
-
-    public static void addUnityViewToBackground() {
-        if (unityPlayer == null) {
+        if (!keepPlayerMounted || !ReactNativeUnity._isUnityReady) {
             return;
         }
-        if (unityPlayer.getParent() != null) {
-            ((ViewGroup) unityPlayer.getParent()).removeView(unityPlayer);
+
+        // pause Unity on blur, resume on focus
+        if (hasWindowFocus && ReactNativeUnity._isUnityPaused) {
+            view.requestFocus();
+            view.resume();
+        } else if (!hasWindowFocus && !ReactNativeUnity._isUnityPaused) {
+            view.pause();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            unityPlayer.setZ(-1f);
-        }
-        final Activity activity = ((Activity) unityPlayer.getContext());
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(1, 1);
-        activity.addContentView(unityPlayer, layoutParams);
     }
 
-    public static void addUnityViewToGroup(ViewGroup group) {
-        if (unityPlayer == null) {
-            return;
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (view != null) {
+            view.configurationChanged(newConfig);
         }
-        if (unityPlayer.getParent() != null) {
-            ((ViewGroup) unityPlayer.getParent()).removeView(unityPlayer);
-        }
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        group.addView(unityPlayer, 0, layoutParams);
-        unityPlayer.windowFocusChanged(true);
-        unityPlayer.requestFocus();
-        unityPlayer.resume();
     }
 
-    public interface CreateCallback {
-        void onReady();
+    @Override
+    protected void onDetachedFromWindow() {
+        if (!this.keepPlayerMounted) {
+            ReactNativeUnity.addUnityViewToBackground();
+        }
+        super.onDetachedFromWindow();
     }
 }
