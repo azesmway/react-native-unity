@@ -152,6 +152,7 @@ export default Unity;
 ```
 
 ## Props
+- `androidKeepPlayerMounted?: boolean` - if set to true, keep the player mounted even when the view that contains it has lost focus.  The player will be paused on blur and resumed on focus.  **FOR ANDROID:** has no effect on iOS.
 - `onUnityMessage?: (event: NativeSyntheticEvent)` - receives a message from a Unity
 - `style: ViewStyle` - styles the UnityView.  (Won't show on Android without dimensions.  Recommended to give it `flex: 1` as in the example)
 

@@ -25,7 +25,7 @@ const ReactNativeUnityView =
 export default class UnityView extends React.Component<ReactNativeUnityViewProps> {
   static defaultProps = {};
 
-  constructor(props: any) {
+  constructor(props: ReactNativeUnityViewProps) {
     super(props);
   }
 

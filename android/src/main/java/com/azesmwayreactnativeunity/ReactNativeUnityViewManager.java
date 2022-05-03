@@ -1,7 +1,6 @@
 package com.azesmwayreactnativeunity;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.ViewGroupManager;
+import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.unity3d.player.UnityPlayer;
 
@@ -161,5 +160,10 @@ public class ReactNativeUnityViewManager extends SimpleViewManager<ReactNativeUn
     @Override
     public void onViewDetachedFromWindow(View v) {
 
+    }
+
+    @ReactProp(name = "androidKeepPlayerMounted", defaultBoolean = false)
+    public void setAndroidKeepPlayerMounted(ReactNativeUnityView view, boolean keepPlayerMounted) {
+        view.keepPlayerMounted = keepPlayerMounted;
     }
 }
