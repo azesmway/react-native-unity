@@ -1,6 +1,7 @@
 package com.azesmwayreactnativeunity;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -165,5 +166,10 @@ public class ReactNativeUnityViewManager extends SimpleViewManager<ReactNativeUn
     @ReactProp(name = "androidKeepPlayerMounted", defaultBoolean = false)
     public void setAndroidKeepPlayerMounted(ReactNativeUnityView view, boolean keepPlayerMounted) {
         view.keepPlayerMounted = keepPlayerMounted;
+    }
+
+    @ReactProp(name = "fullScreen", defaultBoolean = true)
+    public void setFullScreen(ReactNativeUnityView _view, boolean fullScreen) {
+        ReactNativeUnity._fullScreen = fullScreen;
     }
 }
