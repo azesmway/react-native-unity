@@ -13,6 +13,7 @@ interface UnityMessage {
 }
 
 type ReactNativeUnityViewProps = {
+  androidKeepPlayerMounted?: boolean;
   onUnityMessage?: (event: NativeSyntheticEvent<UnityMessage>) => void;
   style?: ViewStyle;
 };
