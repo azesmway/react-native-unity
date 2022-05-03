@@ -1,6 +1,5 @@
 package com.azesmwayreactnativeunity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -10,12 +9,10 @@ import android.view.WindowManager;
 import com.unity3d.player.UnityPlayer;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-import java.util.concurrent.CopyOnWriteArraySet;
-
 public class ReactNativeUnity {
     private static UnityPlayer unityPlayer;
-    private static boolean _isUnityReady;
-    private static boolean _isUnityPaused;
+    public static boolean _isUnityReady;
+    public static boolean _isUnityPaused;
 
     public static UnityPlayer getPlayer() {
         if (!_isUnityReady) {
@@ -50,7 +47,7 @@ public class ReactNativeUnity {
                 unityPlayer = new UnityPlayer(activity);
 
                 try {
-                    // wait a moument. fix unity cannot start when startup.
+                    // wait a moment. fix unity cannot start when startup.
                     Thread.sleep(1000);
                 } catch (Exception e) {
                 }

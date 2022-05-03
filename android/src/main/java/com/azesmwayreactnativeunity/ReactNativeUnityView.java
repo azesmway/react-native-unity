@@ -27,6 +27,7 @@ import java.util.Objects;
 @SuppressLint("ViewConstructor")
 public class ReactNativeUnityView extends FrameLayout {
     private UnityPlayer view;
+    public boolean keepPlayerMounted = false;
 
     public ReactNativeUnityView(Context context) {
         super(context);
@@ -40,8 +41,20 @@ public class ReactNativeUnityView extends FrameLayout {
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        if (view != null) {
-            view.windowFocusChanged(hasWindowFocus);
+        if (view == null) {
+            return;
+        }
+        view.windowFocusChanged(hasWindowFocus);
+
+        if (!keepPlayerMounted) {
+            return;
+        }
+
+        // pause Unity on blur, resume on focus
+        if (hasWindowFocus && ReactNativeUnity._isUnityPaused) {
+            view.resume();
+        } else if (!hasWindowFocus && !ReactNativeUnity._isUnityPaused) {
+            view.pause();
         }
     }
 
@@ -55,7 +68,9 @@ public class ReactNativeUnityView extends FrameLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        ReactNativeUnity.addUnityViewToBackground();
+        if (!this.keepPlayerMounted) {
+            ReactNativeUnity.addUnityViewToBackground();
+        }
         super.onDetachedFromWindow();
     }
 }
