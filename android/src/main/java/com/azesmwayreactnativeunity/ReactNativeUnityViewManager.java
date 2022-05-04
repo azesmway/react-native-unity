@@ -166,4 +166,9 @@ public class ReactNativeUnityViewManager extends SimpleViewManager<ReactNativeUn
     public void setAndroidKeepPlayerMounted(ReactNativeUnityView view, boolean keepPlayerMounted) {
         view.keepPlayerMounted = keepPlayerMounted;
     }
+
+    @ReactProp(name = "fullScreen", defaultBoolean = true)
+    public void setFullScreen(ReactNativeUnityView _view, boolean fullScreen) {
+        ReactNativeUnity._fullScreen = fullScreen;
+    }
 }

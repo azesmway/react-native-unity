@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,12 +45,13 @@ public class ReactNativeUnityView extends FrameLayout {
         }
         view.windowFocusChanged(hasWindowFocus);
 
-        if (!keepPlayerMounted) {
+        if (!keepPlayerMounted || !ReactNativeUnity._isUnityReady) {
             return;
         }
 
         // pause Unity on blur, resume on focus
         if (hasWindowFocus && ReactNativeUnity._isUnityPaused) {
+            view.requestFocus();
             view.resume();
         } else if (!hasWindowFocus && !ReactNativeUnity._isUnityPaused) {
             view.pause();

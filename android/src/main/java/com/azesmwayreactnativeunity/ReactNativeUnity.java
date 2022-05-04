@@ -13,6 +13,7 @@ public class ReactNativeUnity {
     private static UnityPlayer unityPlayer;
     public static boolean _isUnityReady;
     public static boolean _isUnityPaused;
+    public static boolean _fullScreen;
 
     public static UnityPlayer getPlayer() {
         if (!_isUnityReady) {
