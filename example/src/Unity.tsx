@@ -11,14 +11,15 @@ interface IMessage {
 const Unity = () => {
   const unityRef = useRef();
   const message: IMessage = {
-    gameObject: 'gameObject',
-    methodName: 'methodName',
-    message: 'message',
+    gameObject: 'GameObject',
+    methodName: 'MessageRN',
+    message: 'Send a message to Unity',
   };
 
   useEffect(() => {
     setTimeout(() => {
       if (unityRef && unityRef.current) {
+        // @ts-ignore
         unityRef.current.postMessage(
           message.gameObject,
           message.methodName,
@@ -31,8 +32,9 @@ const Unity = () => {
   return (
     // If you wrap your UnityView inside a parent, please take care to set dimensions to it (with `flex:1` for example).
     // See the `Know issues` part in the README.
-    <View style={{flex: 1}}> 
+    <View style={{flex: 1}}>
       <UnityView
+        // @ts-ignore
         ref={unityRef}
         style={{flex: 1}}
         onUnityMessage={result =>
