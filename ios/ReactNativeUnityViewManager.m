@@ -72,4 +72,16 @@ RCT_EXPORT_METHOD(unloadUnity:(nonnull NSNumber*) reactTag) {
     return @[@"onUnityMessage"];
 }
 
+RCT_EXPORT_METHOD(resumeUnity:(nonnull NSNumber*) reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        ReactNativeUnityView *view = (ReactNativeUnityView*) viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:[ReactNativeUnityView class]]) {
+            RCTLogError(@"Cannot find NativeView with tag #%@", reactTag);
+            return;
+        }
+        [ReactNativeUnityView pauseUnity:(BOOL * _Nonnull)false];
+    }];
+}
+
+
 @end
