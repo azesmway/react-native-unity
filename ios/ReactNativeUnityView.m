@@ -10,6 +10,7 @@ NSDictionary* appLaunchOpts;
     self = [super initWithFrame:frame];
     if (self) {
         _uView = [[[ReactNativeUnity launchWithOptions:appLaunchOpts] appController] rootView];
+        [[ReactNativeUnity ufw] registerFrameworkListener:self];
         [FrameworkLibAPI registerAPIforNativeCalls:self];
     }
     return self;
@@ -35,7 +36,6 @@ NSDictionary* appLaunchOpts;
     if(main != nil) {
         [main makeKeyAndVisible];
         if ([ReactNativeUnity ufw]) {
-            [[ReactNativeUnity ufw] unregisterFrameworkListener:[ReactNativeUnity ufw]];
             [[ReactNativeUnity ufw] unloadApplication];
         }
     }
@@ -55,6 +55,20 @@ NSDictionary* appLaunchOpts;
 
         self.onUnityMessage(data);
     }
+}
+
+- (void)unityDidUnload:(NSNotification*)notification {
+    [[ReactNativeUnity ufw] unregisterFrameworkListener:self];
+    [ReactNativeUnity setUfw: nil];
+
+    if (self.onPlayerUnload) {
+        self.onPlayerUnload(nil);
+    }
+}
+
+- (void)unityDidQuit:(NSNotification*)notification {
+    [[ReactNativeUnity ufw] unregisterFrameworkListener:self];
+    [ReactNativeUnity setUfw: nil];
 }
 
 @end
