@@ -16,6 +16,8 @@ type ReactNativeUnityViewProps = {
   androidKeepPlayerMounted?: boolean;
   fullScreen?: boolean;
   onUnityMessage?: (event: NativeSyntheticEvent<UnityMessage>) => void;
+  onPlayerUnload?: (event: NativeSyntheticEvent<void>) => void;
+  onPlayerQuit?: (event: NativeSyntheticEvent<void>) => void;
   style?: ViewStyle;
 };
 
