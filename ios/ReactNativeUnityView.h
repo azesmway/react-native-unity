@@ -10,6 +10,7 @@
 
 @property (nonatomic, copy) RCTBubblingEventBlock _Nullable onUnityMessage;
 @property (nonatomic, copy) RCTBubblingEventBlock _Nullable onPlayerUnload;
+@property (nonatomic, copy) RCTBubblingEventBlock _Nullable onPlayerQuit;
 
 + (void)UnityPostMessage:(NSString* _Nonnull )gameObject methodName:(NSString* _Nonnull)methodName message:(NSString* _Nonnull) message;
 + (void)unloadUnity;

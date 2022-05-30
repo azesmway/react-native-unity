@@ -69,6 +69,10 @@ NSDictionary* appLaunchOpts;
 - (void)unityDidQuit:(NSNotification*)notification {
     [[ReactNativeUnity ufw] unregisterFrameworkListener:self];
     [ReactNativeUnity setUfw: nil];
+
+    if (self.onPlayerQuit) {
+        self.onPlayerQuit(nil);
+    }
 }
 
 @end

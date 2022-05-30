@@ -62,7 +62,7 @@ static id<RNUnityFramework> Unity_ufw;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"onUnityMessage", @"onPlayerUnload"];
+    return @[@"onUnityMessage", @"onPlayerUnload", @"onPlayerQuit"];
 }
 
 @end
