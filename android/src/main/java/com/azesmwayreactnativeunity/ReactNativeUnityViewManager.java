@@ -49,10 +49,26 @@ public class ReactNativeUnityViewManager extends SimpleViewManager<ReactNativeUn
         if (ReactNativeUnity.getPlayer() != null) {
             view.setUnityPlayer(ReactNativeUnity.getPlayer());
         } else {
-            ReactNativeUnity.createPlayer(reactContext.getCurrentActivity(), new ReactNativeUnity.CreateCallback() {
+            ReactNativeUnity.createPlayer(reactContext.getCurrentActivity(), new ReactNativeUnity.UnityPlayerCallback() {
                 @Override
                 public void onReady() {
                     view.setUnityPlayer(ReactNativeUnity.getPlayer());
+                }
+
+                @Override
+                public void onUnload() {
+                  WritableMap data = Arguments.createMap();
+                  data.putString("message", "MyMessage");
+                  ReactContext reactContext = (ReactContext) view.getContext();
+                  reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), "onPlayerUnload", data);
+                }
+
+                @Override
+                public void onQuit() {
+                  WritableMap data = Arguments.createMap();
+                  data.putString("message", "MyMessage");
+                  ReactContext reactContext = (ReactContext) view.getContext();
+                  reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), "onPlayerQuit", data);
                 }
             });
         }
@@ -63,6 +79,8 @@ public class ReactNativeUnityViewManager extends SimpleViewManager<ReactNativeUn
     public Map getExportedCustomBubblingEventTypeConstants() {
         return MapBuilder.builder()
                 .put("onUnityMessage", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onUnityMessage")))
+                .put("onPlayerUnload", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onPlayerUnload")))
+                .put("onPlayerQuit", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onPlayerQuit")))
                 .build();
     }
 
