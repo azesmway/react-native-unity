@@ -11,7 +11,9 @@ NSDictionary* appLaunchOpts;
     if (self) {
         _uView = [[[ReactNativeUnity launchWithOptions:appLaunchOpts] appController] rootView];
         [[ReactNativeUnity ufw] registerFrameworkListener:self];
-        [FrameworkLibAPI registerAPIforNativeCalls:self];
+        // HACK: Sometimes we can't find NativeCallsProxy.h during linking stage
+        // Let's defer that to runtime to fix the build
+        [NSClassFromString(@"FrameworkLibAPI") registerAPIforNativeCalls:self];
     }
     return self;
 }
