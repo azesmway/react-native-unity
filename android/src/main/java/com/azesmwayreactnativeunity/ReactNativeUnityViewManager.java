@@ -86,6 +86,7 @@ public class ReactNativeUnityViewManager extends SimpleViewManager<ReactNativeUn
                 return;
             case "resumeUnity":
                 ReactNativeUnity.getPlayer().resume();
+                return;
             default:
                 throw new IllegalArgumentException(String.format(
                         "Unsupported command %s received by %s.",
