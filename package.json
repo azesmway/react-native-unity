@@ -1,6 +1,6 @@
 {
   "name": "@azesmway/react-native-unity",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React Native Unity",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
