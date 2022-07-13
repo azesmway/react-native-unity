@@ -1,5 +1,26 @@
 #import "ReactNativeUnity.h"
 
+UnityFramework* UnityFrameworkLoad()
+{
+    NSString* bundlePath = nil;
+    bundlePath = [[NSBundle mainBundle] bundlePath];
+    bundlePath = [bundlePath stringByAppendingString: @"/Frameworks/UnityFramework.framework"];
+
+    NSBundle* bundle = [NSBundle bundleWithPath: bundlePath];
+    if ([bundle isLoaded] == false) [bundle load];
+
+    UnityFramework* ufw = [bundle.principalClass getInstance];
+    if (![ufw appController])
+    {
+        // unity is not initialized
+        [ufw setExecuteHeader: &_mh_execute_header];
+    }
+
+    [ufw setDataBundleId: [bundle.bundleIdentifier cStringUsingEncoding:NSUTF8StringEncoding]];
+
+    return ufw;
+}
+
 int gArgc = 1;
 
 @implementation ReactNativeUnity
@@ -19,21 +40,8 @@ static id<RNUnityFramework> Unity_ufw;
 }
 
 + (id<RNUnityFramework>) launchWithOptions:(NSDictionary*)applaunchOptions {
-
-    NSString* bundlePath = nil;
-    bundlePath = [[NSBundle mainBundle] bundlePath];
-    bundlePath = [bundlePath stringByAppendingString: @"/Frameworks/UnityFramework.framework"];
-
-    NSBundle* bundle = [NSBundle bundleWithPath: bundlePath];
-    if ([bundle isLoaded] == false) [bundle load];
-
-    id<RNUnityFramework> framework = [bundle.principalClass getInstance];
-
-    if (![framework appController]) {
-        [framework setExecuteHeader: &_mh_execute_header];
-    }
-
-    [framework setDataBundleId: [bundle.bundleIdentifier cStringUsingEncoding:NSUTF8StringEncoding]];
+    id ufw = UnityFrameworkLoad();
+    [self setUfw: ufw];
 
     unsigned count = (int) [[[NSProcessInfo processInfo] arguments] count];
     char **array = (char **)malloc((count + 1) * sizeof(char*));
@@ -44,10 +52,7 @@ static id<RNUnityFramework> Unity_ufw;
     }
     array[count] = NULL;
 
-    [framework runEmbeddedWithArgc: gArgc argv: array appLaunchOpts: applaunchOptions];
-
-    [self setUfw:framework];
-    [framework registerFrameworkListener:self.ufw];
+    [[self ufw] runEmbeddedWithArgc: gArgc argv: array appLaunchOpts: applaunchOptions];
 
     return self.ufw;
 }
@@ -57,7 +62,7 @@ static id<RNUnityFramework> Unity_ufw;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"onUnityMessage"];
+    return @[@"onUnityMessage", @"onPlayerUnload", @"onPlayerQuit"];
 }
 
 @end

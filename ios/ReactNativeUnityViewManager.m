@@ -12,6 +12,8 @@
 
 RCT_EXPORT_MODULE(ReactNativeUnityView)
 RCT_EXPORT_VIEW_PROPERTY(onUnityMessage, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPlayerUnload, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPlayerQuit, RCTBubblingEventBlock)
 
 - (UIView *)view
 {
@@ -69,7 +71,7 @@ RCT_EXPORT_METHOD(unloadUnity:(nonnull NSNumber*) reactTag) {
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"onUnityMessage"];
+    return @[@"onUnityMessage", @"onPlayerUnload", @"onPlayerQuit"];
 }
 
 RCT_EXPORT_METHOD(resumeUnity:(nonnull NSNumber*) reactTag) {

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.unity3d.player.UnityPlayer;
+import com.unity3d.player.IUnityPlayerLifecycleEvents;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class ReactNativeUnity {
@@ -30,7 +31,7 @@ public class ReactNativeUnity {
         return _isUnityPaused;
     }
 
-    public static void createPlayer(final Activity activity, final CreateCallback callback) {
+    public static void createPlayer(final Activity activity, final UnityPlayerCallback callback) {
         if (unityPlayer != null) {
             callback.onReady();
             return;
@@ -45,7 +46,17 @@ public class ReactNativeUnity {
                     fullScreen = true;
                 }
 
-                unityPlayer = new UnityPlayer(activity);
+                unityPlayer = new UnityPlayer(activity, new IUnityPlayerLifecycleEvents() {
+                  @Override
+                  public void onUnityPlayerUnloaded() {
+                    callback.onUnload();
+                  }
+
+                  @Override
+                  public void onUnityPlayerQuitted() {
+                    callback.onQuit();
+                  }
+                });
 
                 try {
                     // wait a moment. fix unity cannot start when startup.
@@ -120,7 +131,9 @@ public class ReactNativeUnity {
         unityPlayer.resume();
     }
 
-    public interface CreateCallback {
+    public interface UnityPlayerCallback {
         void onReady();
+        void onUnload();
+        void onQuit();
     }
 }
