@@ -107,6 +107,13 @@ public class ReactNativeUnity {
             return;
         }
         if (unityPlayer.getParent() != null) {
+            // NOTE: If we're being detached as part of the transition, make sure
+            // to explicitly finish the transition first, as it might still keep
+            // the view's parent around despite calling `removeView()` here. This
+            // prevents a crash on an `addContentView()` later on.
+            // Otherwise, if there's no transition, it's a no-op.
+            // See https://stackoverflow.com/a/58247331
+            ((ViewGroup) unityPlayer.getParent()).endViewTransition(unityPlayer);
             ((ViewGroup) unityPlayer.getParent()).removeView(unityPlayer);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
