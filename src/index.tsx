@@ -65,6 +65,15 @@ export default class UnityView extends React.Component<ReactNativeUnityViewProps
     );
   }
 
+  public windowFocusChanged(hasFocus = true) {
+    if (Platform.OS !== 'android') return;
+    UIManager.dispatchViewManagerCommand(
+      findNodeHandle(this),
+      this.getCommand('windowFocusChanged'),
+      [Boolean(hasFocus)]
+    );
+  }
+
   private getCommand(cmd: string): any {
     if (Platform.OS === 'ios') {
       return UIManager.getViewManagerConfig('ReactNativeUnityView').Commands[

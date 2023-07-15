@@ -163,6 +163,7 @@ export default Unity;
 
 - `unloadUnity()` - the Unity is unloaded automatically when the react-native component is unmounted, but if you want to unload the Unity, you can call this method
 - `pauseUnity?: (pause: boolean)` - pause the Unity
+- `windowFocusChanged(hasFocus: boolean = false)` - simulate focus change (intended to be used to recover from black screen (not rendering) after remounting Unity view when `resumeUnity` does not work)  **ANDROID ONLY**
 
 # Contributing
 
