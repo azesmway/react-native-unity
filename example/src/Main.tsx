@@ -1,17 +1,23 @@
-import * as React from 'react';
-import {Button, View, Text} from 'react-native';
-import { NavigationProp } from "@react-navigation/core/lib/typescript/src/types";
+import { StackActions, useNavigation } from '@react-navigation/native'
+import * as React from 'react'
+import { Button, Text, View } from 'react-native'
 
-const Main = ({navigation}: NavigationProp) => {
+const Main = () => {
+  const navigation = useNavigation()
+
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Unity Screen</Text>
       <Button
         title="Go to Unity"
-        onPress={() => navigation.navigate('Unity')}
+        onPress={() => {
+          const pushAction = StackActions.push('Unity', {})
+
+          navigation.dispatch(pushAction)
+        }}
       />
     </View>
-  );
-};
+  )
+}
 
-export default Main;
+export default Main

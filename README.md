@@ -2,6 +2,17 @@
 
 The plugin that allows you to embed a UNITY project into the react native as a full-fledged component
 
+<span style="color: red; font-size: 20px; font-weight: bold"> ATTENTION! </span>
+
+The plugin now supports the new architecture as well.
+For iOS, it is no longer necessary to embed a project created with Unity. Only the built UnityFramework.framework is used. It should be placed in the plugin folder at the path -
+```node_modules/@azesmway/react-native-unity/ios/``` or change the path in the ```react-native-unity.podspec``` file.
+
+```
+s.vendored_frameworks = ["ios/UnityFramework.framework"].
+```
+
+
 # Installation
 
 ## RN
@@ -62,13 +73,12 @@ public class ButtonBehavior : MonoBehaviour
 
 ## iOS
 
-1. Build Unity app to `[project_root]/unity/builds/ios`
-2. Add `Unity-iPhone.xcodeproj` to your XCode: press the right mouse button in the Left Navigator XCode -> `Add Files to [project_name]...` -> `[project_root]/unity/builds/ios/Unity-iPhone.xcodeproj`
-3. Add `UnityFramework.framework` to `General` / section `Frameworks, Libraries, and Embedded Content`
-4. Select Data folder and set a checkbox in the "Target Membership" section to "UnityFramework"
-5. You need to select the NativeCallProxy.h inside the `Unity-iPhone/Libraries/Plugins/iOS` folder of the Unity-iPhone project and change UnityFramework’s target membership from Project to Public. Don’t forget this step! https://miro.medium.com/max/1400/1*6v9KfxzR6olQNioUp_dFQQ.png
-6. In `Build Phases` remove UnityFramework.framework from `Linked Binary With Libraries`
-7. In Build Phases move Embedded Frameworks before Compile Sources ( drag and drop )
+1. Build Unity app
+2. Open the created project in XCode
+3. Select Data folder and set a checkbox in the "Target Membership" section to "UnityFramework" ![image info](./docs/step1.jpg)
+4. You need to select the NativeCallProxy.h inside the `Unity-iPhone/Libraries/Plugins/iOS` folder of the Unity-iPhone project and change UnityFramework’s target membership from Project to Public. Don’t forget this step! ![image info](./docs/step2.jpg)
+5. If required - sign the project ```UnityFramework.framework``` and build a framework ![image info](./docs/step3.jpg)
+6. Open the folder with the built framework (by right-clicking) and move it to the plugin folder (```node_modules/@azesmway/react-native-unity/ios/```) ![image info](./docs/step4.jpg)
 
 ### Android
 

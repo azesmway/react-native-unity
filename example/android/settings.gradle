@@ -5,3 +5,4 @@ project(':unityLibrary').projectDir=new File('..\\unity\\builds\\android\\unityL
 
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')
