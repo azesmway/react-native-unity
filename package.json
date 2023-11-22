@@ -41,7 +41,10 @@
     "android",
     "unity"
   ],
-  "repository": "https://github.com/azesmway/react-native-unity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azesmway/react-native-unity.git"
+  },
   "author": "Alexey Zolotaryov <azesm@me.com> (https://github.com/azesmway)",
   "license": "MIT",
   "bugs": {
