@@ -211,11 +211,13 @@ Class<RCTComponentViewProtocol> RNUnityViewCls(void) {
 #else
 
 -(id)initWithFrame:(CGRect)frame {
-    return [super initWithFrame:frame];
-}
+    self = [super initWithFrame:frame];
 
-- (void)didMoveToWindow {
-    [self initUnityModule];
+    if (self) {
+        [self initUnityModule];
+    }
+
+    return self;
 }
 
 #endif
