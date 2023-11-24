@@ -37,44 +37,42 @@ static RNUnityView *sharedInstance;
 }
 
 - (void)initUnityModule {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @try {
-            if([self unityIsInitialized]) {
-                return;
-            }
-
-            [self setUfw: UnityFrameworkLoad()];
-            [[self ufw] registerFrameworkListener: self];
-
-            unsigned count = (int) [[[NSProcessInfo processInfo] arguments] count];
-            char **array = (char **)malloc((count + 1) * sizeof(char*));
-
-            for (unsigned i = 0; i < count; i++)
-            {
-                 array[i] = strdup([[[[NSProcessInfo processInfo] arguments] objectAtIndex:i] UTF8String]);
-            }
-            array[count] = NULL;
-
-            [[self ufw] runEmbeddedWithArgc: gArgc argv: array appLaunchOpts: appLaunchOpts];
-            [[self ufw] appController].quitHandler = ^(){ NSLog(@"AppController.quitHandler called"); };
-            [self.ufw.appController.rootView removeFromSuperview];
-
-            if (@available(iOS 13.0, *)) {
-                [[[[self ufw] appController] window] setWindowScene: nil];
-            } else {
-                [[[[self ufw] appController] window] setScreen: nil];
-            }
-
-            [[[[self ufw] appController] window] addSubview: self.ufw.appController.rootView];
-            [[[[self ufw] appController] window] makeKeyAndVisible];
-            [[[[[[self ufw] appController] window] rootViewController] view] setNeedsLayout];
-
-            [NSClassFromString(@"FrameworkLibAPI") registerAPIforNativeCalls:self];
+    @try {
+        if([self unityIsInitialized]) {
+            return;
         }
-        @catch (NSException *e) {
-            NSLog(@"%@",e);
+
+        [self setUfw: UnityFrameworkLoad()];
+        [[self ufw] registerFrameworkListener: self];
+
+        unsigned count = (int) [[[NSProcessInfo processInfo] arguments] count];
+        char **array = (char **)malloc((count + 1) * sizeof(char*));
+
+        for (unsigned i = 0; i < count; i++)
+        {
+             array[i] = strdup([[[[NSProcessInfo processInfo] arguments] objectAtIndex:i] UTF8String]);
         }
-    });
+        array[count] = NULL;
+
+        [[self ufw] runEmbeddedWithArgc: gArgc argv: array appLaunchOpts: appLaunchOpts];
+        [[self ufw] appController].quitHandler = ^(){ NSLog(@"AppController.quitHandler called"); };
+        [self.ufw.appController.rootView removeFromSuperview];
+
+        if (@available(iOS 13.0, *)) {
+            [[[[self ufw] appController] window] setWindowScene: nil];
+        } else {
+            [[[[self ufw] appController] window] setScreen: nil];
+        }
+
+        [[[[self ufw] appController] window] addSubview: self.ufw.appController.rootView];
+        [[[[self ufw] appController] window] makeKeyAndVisible];
+        [[[[[[self ufw] appController] window] rootViewController] view] setNeedsLayout];
+
+        [NSClassFromString(@"FrameworkLibAPI") registerAPIforNativeCalls:self];
+    }
+    @catch (NSException *e) {
+        NSLog(@"%@",e);
+    }
 }
 
 - (void)layoutSubviews {

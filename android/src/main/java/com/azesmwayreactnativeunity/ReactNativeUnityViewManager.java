@@ -27,9 +27,15 @@ import java.util.Map;
 @ReactModule(name = ReactNativeUnityViewManager.NAME)
 public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec<ReactNativeUnityView> implements LifecycleEventListener, View.OnAttachStateChangeListener {
   ReactApplicationContext reactContext;
-  static ThemedReactContext themedContext;
+  ReactApplicationContext context;
   static ReactNativeUnityView view;
   public static final String NAME = "RNUnityView";
+
+  public ReactNativeUnityViewManager(ReactApplicationContext context) {
+    super();
+    this.context = context;
+    context.addLifecycleEventListener(this);
+  }
 
   @NonNull
   @Override
@@ -40,8 +46,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   @NonNull
   @Override
   public ReactNativeUnityView createViewInstance(@NonNull ThemedReactContext context) {
-    themedContext = context;
-    view = new ReactNativeUnityView(context);
+    view = new ReactNativeUnityView(this.context);
     view.addOnAttachStateChangeListener(this);
 
     if (getPlayer() != null) {
@@ -226,7 +231,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   public void postMessage(ReactNativeUnityView view, String gameObject, String methodName, String message) {
     if (isUnityReady()) {
       assert getPlayer() != null;
-      getPlayer().UnitySendMessage(gameObject, methodName, message);
+      UnityPlayer.UnitySendMessage(gameObject, methodName, message);
     }
   }
 }
