@@ -1,3 +1,3 @@
-import UnityView from './UnityView'
+import UnityView from './UnityView';
 
-export default UnityView
+export default UnityView;

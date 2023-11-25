@@ -1,12 +1,12 @@
 import React from 'react';
 
-import NativeUnityView, { Commands } from './specs/UnityViewNativeComponent'
+import NativeUnityView, { Commands } from './specs/UnityViewNativeComponent';
 import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
 import { Platform } from 'react-native';
 
 type UnityViewContentUpdateEvent = Readonly<{
-  message: string
-}>
+  message: string;
+}>;
 
 type RNUnityViewProps = {
   androidKeepPlayerMounted?: boolean;
@@ -16,32 +16,36 @@ type RNUnityViewProps = {
   onPlayerQuit?: DirectEventHandler<UnityViewContentUpdateEvent>;
 };
 
-type ComponentRef = InstanceType<typeof NativeUnityView>
+type ComponentRef = InstanceType<typeof NativeUnityView>;
 
 export default class UnityView extends React.Component<RNUnityViewProps> {
-  ref = React.createRef<ComponentRef>()
+  ref = React.createRef<ComponentRef>();
 
-  public postMessage = (gameObject: string, methodName: string, message: string) => {
+  public postMessage = (
+    gameObject: string,
+    methodName: string,
+    message: string
+  ) => {
     if (this.ref.current) {
-      Commands.postMessage(this.ref.current, gameObject, methodName, message)
+      Commands.postMessage(this.ref.current, gameObject, methodName, message);
     }
-  }
+  };
 
   public unloadUnity = () => {
     if (this.ref.current) {
-      Commands.unloadUnity(this.ref.current)
+      Commands.unloadUnity(this.ref.current);
     }
-  }
+  };
 
   public pauseUnity(pause: boolean) {
     if (this.ref.current) {
-      Commands.pauseUnity(this.ref.current, pause)
+      Commands.pauseUnity(this.ref.current, pause);
     }
   }
 
   public resumeUnity() {
     if (this.ref.current) {
-      Commands.resumeUnity(this.ref.current)
+      Commands.resumeUnity(this.ref.current);
     }
   }
 
@@ -49,7 +53,7 @@ export default class UnityView extends React.Component<RNUnityViewProps> {
     if (Platform.OS !== 'android') return;
 
     if (this.ref.current) {
-      Commands.windowFocusChanged(this.ref.current, hasFocus)
+      Commands.windowFocusChanged(this.ref.current, hasFocus);
     }
   }
 
@@ -61,7 +65,7 @@ export default class UnityView extends React.Component<RNUnityViewProps> {
 
   componentWillUnmount() {
     if (this.ref.current) {
-      Commands.unloadUnity(this.ref.current)
+      Commands.unloadUnity(this.ref.current);
     }
   }
 

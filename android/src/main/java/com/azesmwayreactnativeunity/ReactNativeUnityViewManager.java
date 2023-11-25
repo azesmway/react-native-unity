@@ -26,7 +26,6 @@ import java.util.Map;
 
 @ReactModule(name = ReactNativeUnityViewManager.NAME)
 public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec<ReactNativeUnityView> implements LifecycleEventListener, View.OnAttachStateChangeListener {
-  ReactApplicationContext reactContext;
   ReactApplicationContext context;
   static ReactNativeUnityView view;
   public static final String NAME = "RNUnityView";
