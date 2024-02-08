@@ -37,7 +37,7 @@ public class ReactNativeUnity {
       callback.onReady();
       return;
     }
-    if (activity) {
+    if (activity != null) {
       activity.runOnUiThread(new Runnable() {
         @Override
         public void run() {
