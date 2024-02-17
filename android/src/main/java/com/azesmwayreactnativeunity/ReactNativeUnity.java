@@ -37,49 +37,51 @@ public class ReactNativeUnity {
       callback.onReady();
       return;
     }
-    activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        activity.getWindow().setFormat(PixelFormat.RGBA_8888);
-        int flag = activity.getWindow().getAttributes().flags;
-        boolean fullScreen = false;
-        if ((flag & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
-          fullScreen = true;
-        }
-
-        unityPlayer = new UnityPlayer(activity, new IUnityPlayerLifecycleEvents() {
-          @Override
-          public void onUnityPlayerUnloaded() {
-            callback.onUnload();
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          activity.getWindow().setFormat(PixelFormat.RGBA_8888);
+          int flag = activity.getWindow().getAttributes().flags;
+          boolean fullScreen = false;
+          if ((flag & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN) {
+            fullScreen = true;
           }
 
-          @Override
-          public void onUnityPlayerQuitted() {
-            callback.onQuit();
+          unityPlayer = new UnityPlayer(activity, new IUnityPlayerLifecycleEvents() {
+            @Override
+            public void onUnityPlayerUnloaded() {
+              callback.onUnload();
+            }
+
+            @Override
+            public void onUnityPlayerQuitted() {
+              callback.onQuit();
+            }
+          });
+
+          try {
+            // wait a moment. fix unity cannot start when startup.
+            Thread.sleep(1000);
+          } catch (Exception e) {
           }
-        });
 
-        try {
-          // wait a moment. fix unity cannot start when startup.
-          Thread.sleep(1000);
-        } catch (Exception e) {
+          // start unity
+          addUnityViewToBackground();
+          unityPlayer.windowFocusChanged(true);
+          unityPlayer.requestFocus();
+          unityPlayer.resume();
+
+          // restore window layout
+          if (!fullScreen) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+          }
+          _isUnityReady = true;
+          callback.onReady();
         }
-
-        // start unity
-        addUnityViewToBackground();
-        unityPlayer.windowFocusChanged(true);
-        unityPlayer.requestFocus();
-        unityPlayer.resume();
-
-        // restore window layout
-        if (!fullScreen) {
-          activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-          activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        _isUnityReady = true;
-        callback.onReady();
-      }
-    });
+      });
+    }
   }
 
   public static void pause() {
