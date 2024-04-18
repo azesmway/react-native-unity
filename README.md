@@ -2,19 +2,17 @@
 
 The plugin that allows you to embed a Unity project into React Native as a full-fledged component. The plugin now supports the new architecture.
 
-
 > [!IMPORTANT]
 > For iOS, it is no longer necessary to embed a project created with Unity. Only the built `UnityFramework` is used. It should be placed in the plugin folder at the path - `<YOUR_RN_PROJECT>/unity/builds/ios`
 
 ## Device Support:
 
-| Platform | Supported |
-| -------- | --------- |
-| iOS Simulator | ❌ |
-| iOS Device | ✅ |
-| Android Emulator | ✅ |
-| Android Device | ✅ |
-
+| Platform         | Supported |
+| ---------------- | --------- |
+| iOS Simulator    | ❌        |
+| iOS Device       | ✅        |
+| Android Emulator | ✅        |
+| Android Device   | ✅        |
 
 # Installation
 
@@ -72,6 +70,7 @@ public class ButtonBehavior : MonoBehaviour
   }
 }
 ```
+
 </details>
 
 ## Export iOS Unity Project:
@@ -91,7 +90,7 @@ After you've moved the files from the `unity` folder to your Unity project, you 
 
 1. Open your Unity project
 2. Export Unity app to `<YOUR_RN_PROJECT>/unity/builds/android`
-3. Remove `<intent-filter>...</intent-filter>` from ``<project_name>/unity/builds/android/unityLibrary/src/main/AndroidManifest.xml`` at unityLibrary to leave only integrated version.
+3. Remove `<intent-filter>...</intent-filter>` from `<YOUR_RN_PROJECT>/unity/builds/android/unityLibrary/src/main/AndroidManifest.xml` at unityLibrary to leave only integrated version.
 
 If you're using expo, you're done. The built-in expo plugin will handle the rest. If you're not using expo, you'll need to follow the steps below.
 
@@ -101,26 +100,26 @@ If you're using expo, you're done. The built-in expo plugin will handle the rest
    project(':unityLibrary').projectDir=new File('..\\unity\\builds\\android\\unityLibrary')
    ```
 2. Add into `android/build.gradle`
-    ```groovy
-    allprojects {
-      repositories {
-        // this
-        flatDir {
-            dirs "${project(':unityLibrary').projectDir}/libs"
-        }
-        // ...
-      }
-    }
-    ```
+   ```groovy
+   allprojects {
+     repositories {
+       // this
+       flatDir {
+           dirs "${project(':unityLibrary').projectDir}/libs"
+       }
+       // ...
+     }
+   }
+   ```
 3. Add into `android/gradle.properties`
-    ```gradle
-    unityStreamingAssets=.unity3d
-    ```
-4. Add strings to ``android/app/src/main/res/values/strings.xml``
+   ```gradle
+   unityStreamingAssets=.unity3d
+   ```
+4. Add strings to `android/app/src/main/res/values/strings.xml`
 
-    ```javascript
-    <string name="game_view_content_description">Game view</string>
-    ```
+   ```javascript
+   <string name="game_view_content_description">Game view</string>
+   ```
 
 # Known issues
 
@@ -131,7 +130,7 @@ If you're using expo, you're done. The built-in expo plugin will handle the rest
 
 ## Sample code
 
-```js
+```jsx
 import React, { useRef, useEffect } from 'react';
 
 import UnityView from '@azesmway/react-native-unity';
@@ -153,7 +152,11 @@ const Unity = () => {
         methodName: 'methodName',
         message: 'message',
       };
-      unityRef.current.postMessage(message.gameObject, message.methodName, message.message);
+      unityRef.current.postMessage(
+        message.gameObject,
+        message.methodName,
+        message.message
+      );
     }
   }, []);
 
@@ -163,7 +166,7 @@ const Unity = () => {
         ref={unityRef}
         style={{ flex: 1 }}
         onUnityMessage={(result) => {
-          console.log('onUnityMessage', result.nativeEvent.message)
+          console.log('onUnityMessage', result.nativeEvent.message);
         }}
       />
     </View>
@@ -175,18 +178,18 @@ export default Unity;
 
 ## Props
 
-- `style: ViewStyle` - styles the UnityView.  (Won't show on Android without dimensions.  Recommended to give it `flex: 1` as in the example)
+- `style: ViewStyle` - styles the UnityView. (Won't show on Android without dimensions. Recommended to give it `flex: 1` as in the example)
 - `onUnityMessage?: (event: NativeSyntheticEvent)` - receives a message from a Unity
-- `androidKeepPlayerMounted?: boolean` - if set to true, keep the player mounted even when the view that contains it has lost focus.  The player will be paused on blur and resumed on focus.  **ANDROID ONLY**
-- `fullScreen?: boolean` - defaults to true.  If set to false, will not request full screen access.  **ANDROID ONLY**
+- `androidKeepPlayerMounted?: boolean` - if set to true, keep the player mounted even when the view that contains it has lost focus. The player will be paused on blur and resumed on focus. **ANDROID ONLY**
+- `fullScreen?: boolean` - defaults to true. If set to false, will not request full screen access. **ANDROID ONLY**
 
 ## Methods
 
 - `postMessage(gameObject, methodName, message)` - sends a message to the Unity. **FOR IOS:** The native method of unity is used to send a message
-`sendMessageToGOWithName:(const char*)goName functionName:(const char*)name message:(const char*)msg;`, more details can be found in the [documentation](https://docs.unity3d.com/2021.1/Documentation/Manual/UnityasaLibrary-iOS.html)
+  `sendMessageToGOWithName:(const char*)goName functionName:(const char*)name message:(const char*)msg;`, more details can be found in the [documentation](https://docs.unity3d.com/2021.1/Documentation/Manual/UnityasaLibrary-iOS.html)
 - `unloadUnity()` - the Unity is unloaded automatically when the react-native component is unmounted, but if you want to unload the Unity, you can call this method
 - `pauseUnity?: (pause: boolean)` - pause the Unity
-- `windowFocusChanged(hasFocus: boolean = false)` - simulate focus change (intended to be used to recover from black screen (not rendering) after remounting Unity view when `resumeUnity` does not work)  **ANDROID ONLY**
+- `windowFocusChanged(hasFocus: boolean = false)` - simulate focus change (intended to be used to recover from black screen (not rendering) after remounting Unity view when `resumeUnity` does not work) **ANDROID ONLY**
 
 # Contributing
 
