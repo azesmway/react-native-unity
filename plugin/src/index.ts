@@ -5,7 +5,7 @@ import {
   withProjectBuildGradle,
   withSettingsGradle,
   withStringsXml,
-} from 'expo/config-plugins';
+} from '@expo/config-plugins';
 
 const withUnity: ConfigPlugin<{ name?: string }> = (
   config,
