@@ -1,11 +1,11 @@
 import {
   AndroidConfig,
-  ConfigPlugin,
   withGradleProperties,
   withProjectBuildGradle,
   withSettingsGradle,
   withStringsXml,
 } from '@expo/config-plugins';
+import type { ConfigPlugin } from '@expo/config-plugins';
 
 const withUnity: ConfigPlugin<{ name?: string }> = (
   config,
