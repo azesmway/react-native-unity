@@ -20,8 +20,8 @@ import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.unity3d.player.UnityPlayer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 @ReactModule(name = ReactNativeUnityViewManager.NAME)
@@ -49,30 +49,34 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
     view.addOnAttachStateChangeListener(this);
 
     if (getPlayer() != null) {
-      view.setUnityPlayer(getPlayer());
+        try {
+            view.setUnityPlayer(getPlayer());
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {}
     } else {
-      createPlayer(context.getCurrentActivity(), new UnityPlayerCallback() {
-        @Override
-        public void onReady() {
-          view.setUnityPlayer(getPlayer());
-        }
+        try {
+            createPlayer(context.getCurrentActivity(), new UnityPlayerCallback() {
+              @Override
+              public void onReady() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+                view.setUnityPlayer(getPlayer());
+              }
 
-        @Override
-        public void onUnload() {
-          WritableMap data = Arguments.createMap();
-          data.putString("message", "MyMessage");
-          ReactContext reactContext = (ReactContext) view.getContext();
-          reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), "onPlayerUnload", data);
-        }
+              @Override
+              public void onUnload() {
+                WritableMap data = Arguments.createMap();
+                data.putString("message", "MyMessage");
+                ReactContext reactContext = (ReactContext) view.getContext();
+                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), "onPlayerUnload", data);
+              }
 
-        @Override
-        public void onQuit() {
-          WritableMap data = Arguments.createMap();
-          data.putString("message", "MyMessage");
-          ReactContext reactContext = (ReactContext) view.getContext();
-          reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), "onPlayerQuit", data);
-        }
-      });
+              @Override
+              public void onQuit() {
+                WritableMap data = Arguments.createMap();
+                data.putString("message", "MyMessage");
+                ReactContext reactContext = (ReactContext) view.getContext();
+                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(view.getId(), "onPlayerQuit", data);
+              }
+            });
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {}
     }
 
     return view;
@@ -81,9 +85,11 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   @Override
   public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
     Map<String, Object> export = super.getExportedCustomDirectEventTypeConstants();
+
     if (export == null) {
       export = MapBuilder.newHashMap();
     }
+
     export.put("onUnityMessage", MapBuilder.of("registrationName", "onUnityMessage"));
     export.put("onPlayerUnload", MapBuilder.of("registrationName", "onPlayerUnload"));
     export.put("onPlayerQuit", MapBuilder.of("registrationName", "onPlayerQuit"));
@@ -95,6 +101,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   public void receiveCommand(@NonNull ReactNativeUnityView view, String commandType, @Nullable ReadableArray args) {
     Assertions.assertNotNull(view);
     Assertions.assertNotNull(args);
+
     switch (commandType) {
       case "postMessage":
         assert args != null;
@@ -187,7 +194,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   public void onHostDestroy() {
     if (isUnityReady()) {
       assert getPlayer() != null;
-      getPlayer().quit();
+      getPlayer().destroy();
     }
   }
 
@@ -212,9 +219,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   }
 
   @Override
-  public void onViewDetachedFromWindow(View v) {
-
-  }
+  public void onViewDetachedFromWindow(View v) {}
 
   @ReactProp(name = "androidKeepPlayerMounted", defaultBoolean = false)
   public void setAndroidKeepPlayerMounted(ReactNativeUnityView view, boolean keepPlayerMounted) {
@@ -230,7 +235,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   public void postMessage(ReactNativeUnityView view, String gameObject, String methodName, String message) {
     if (isUnityReady()) {
       assert getPlayer() != null;
-      UnityPlayer.UnitySendMessage(gameObject, methodName, message);
+      UPlayer.UnitySendMessage(gameObject, methodName, message);
     }
   }
 }

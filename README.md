@@ -2,6 +2,9 @@
 
 The plugin that allows you to embed a Unity project into React Native as a full-fledged component. The plugin now supports the new architecture.
 
+### Android
+Attention! Added support for Unity 2023 and above
+
 > [!IMPORTANT]
 > For iOS, it is no longer necessary to embed a project created with Unity. Only the built `UnityFramework` is used. It should be placed in the plugin folder at the path - `<YOUR_RN_PROJECT>/unity/builds/ios`
 
