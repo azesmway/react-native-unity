@@ -6,6 +6,7 @@ import android.content.Context;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ReactNativeUnityView extends FrameLayout {
   private UPlayer view;
   public boolean keepPlayerMounted = false;
+  public static final String NAME = "RNUnityView";
 
   public ReactNativeUnityView(Context context) {
     super(context);
@@ -54,18 +56,5 @@ public class ReactNativeUnityView extends FrameLayout {
     if (view != null) {
       view.configurationChanged(newConfig);
     }
-  }
-
-  @Override
-  protected void onDetachedFromWindow() {
-    if (!this.keepPlayerMounted) {
-        try {
-            addUnityViewToBackground();
-        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    super.onDetachedFromWindow();
   }
 }
