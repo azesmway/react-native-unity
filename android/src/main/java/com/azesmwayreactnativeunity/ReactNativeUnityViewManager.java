@@ -3,6 +3,7 @@ package com.azesmwayreactnativeunity;
 import static com.azesmwayreactnativeunity.ReactNativeUnity.*;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Objects;
 
 @ReactModule(name = ReactNativeUnityViewManager.NAME)
 public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec<ReactNativeUnityView> implements LifecycleEventListener, View.OnAttachStateChangeListener {
@@ -57,6 +59,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
             createPlayer(context.getCurrentActivity(), new UnityPlayerCallback() {
               @Override
               public void onReady() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+                Log.d(NAME, "onReady");
                 view.setUnityPlayer(getPlayer());
               }
 
@@ -115,7 +118,9 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
         pauseUnity(view, args.getBoolean(0));
         return;
       case "resumeUnity":
-        resumeUnity(view);
+        onHostPause();
+        onHostResume();
+
         return;
       case "windowFocusChanged":
         assert args != null;
@@ -168,12 +173,6 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
   }
 
   @Override
-  public void onDropViewInstance(ReactNativeUnityView view) {
-    view.removeOnAttachStateChangeListener(this);
-    super.onDropViewInstance(view);
-  }
-
-  @Override
   public void onHostResume() {
     if (isUnityReady()) {
       assert getPlayer() != null;
@@ -192,10 +191,7 @@ public class ReactNativeUnityViewManager extends ReactNativeUnityViewManagerSpec
 
   @Override
   public void onHostDestroy() {
-    if (isUnityReady()) {
-      assert getPlayer() != null;
-      getPlayer().destroy();
-    }
+
   }
 
   private void restoreUnityUserState() {

@@ -63,12 +63,6 @@ export default class UnityView extends React.Component<RNUnityViewProps> {
     };
   }
 
-  componentWillUnmount() {
-    if (this.ref.current) {
-      Commands.unloadUnity(this.ref.current);
-    }
-  }
-
   render() {
     return <NativeUnityView ref={this.ref} {...this.getProps()} />;
   }
