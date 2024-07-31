@@ -59,8 +59,8 @@ const withGradlePropertiesMod = (config) =>
 
 // add string
 const withStringsXMLMod = (config) =>
-  withStringsXml(config, (config) => {
-    config.modResults = AndroidConfig.Strings.setStringItem(
+  withStringsXml(config, (modConfig) => {
+    modConfig.modResults = AndroidConfig.Strings.setStringItem(
       [
         {
           _: 'Game View',
@@ -69,9 +69,9 @@ const withStringsXMLMod = (config) =>
           },
         },
       ],
-      config.modResults
+      modConfig.modResults
     );
-    return config;
+    return modConfig;
   });
 
 /*
@@ -82,12 +82,15 @@ const withStringsXMLMod = (config) =>
 const withPodfileDangerousMod = (config) =>
   withDangerousMod(config, [
     'ios',
-    (config) => {
+    (modConfig) => {
       /*
             We need to do a 'dangerous' mod to the Podfile
             and add lines to the post install hook to exclude arm64 architecture for simulator builds
             */
-      const file = path.join(config.modRequest.platformProjectRoot, 'Podfile');
+      const file = path.join(
+        modConfig.modRequest.platformProjectRoot,
+        'Podfile'
+      );
       const contents = fs.readFileSync(file).toString();
 
       // look for the closing bracket of the `react_native_post_install` block, insert stuff on the following lines
@@ -99,7 +102,7 @@ const withPodfileDangerousMod = (config) =>
 
       const newContents = contents.replace(regex, '$&\n' + newLine);
       fs.writeFileSync(file, newContents);
-      return config;
+      return modConfig;
     },
   ]);
 
