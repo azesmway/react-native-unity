@@ -18,7 +18,7 @@ UnityFramework* UnityFrameworkLoad() {
     UnityFramework* ufw = [bundle.principalClass getInstance];
     if (![ufw appController])
     {
-        [ufw setExecuteHeader: &_mh_execute_header];
+        [ufw setExecuteHeader: &_mh_dylib_header];
     }
 
     [ufw setDataBundleId: [bundle.bundleIdentifier cStringUsingEncoding:NSUTF8StringEncoding]];
