@@ -1,5 +1,7 @@
 #import "RNUnityView.h"
-
+#ifdef DEBUG
+#include <mach-o/ldsyms.h>
+#endif
 #ifdef RCT_NEW_ARCH_ENABLED
 using namespace facebook::react;
 #endif
@@ -18,7 +20,11 @@ UnityFramework* UnityFrameworkLoad() {
     UnityFramework* ufw = [bundle.principalClass getInstance];
     if (![ufw appController])
     {
-        [ufw setExecuteHeader: &_mh_execute_header];
+#ifdef DEBUG
+      [ufw setExecuteHeader: &_mh_dylib_header];
+#else
+      [ufw setExecuteHeader: &_mh_execute_header];
+#endif
     }
 
     [ufw setDataBundleId: [bundle.bundleIdentifier cStringUsingEncoding:NSUTF8StringEncoding]];
