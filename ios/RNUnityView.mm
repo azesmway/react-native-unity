@@ -84,6 +84,10 @@ static RNUnityView *sharedInstance;
 - (void)layoutSubviews {
    [super layoutSubviews];
 
+   if(![self unityIsInitialized]) {
+      [self initUnityModule];
+   }
+
    if([self unityIsInitialized]) {
       self.ufw.appController.rootView.frame = self.bounds;
       [self addSubview:self.ufw.appController.rootView];
