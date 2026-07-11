@@ -48,5 +48,11 @@ Pod::Spec.new do |s|
     cp -R ../../../unity/builds/ios/ ios/
   CMD
 
-  s.vendored_frameworks = ["ios/UnityFramework.framework"]
+  # Prefer an XCFramework when the Unity export provides one (device + simulator slices,
+  # enables running in the iOS Simulator); fall back to the classic device-only framework.
+  if File.directory?(File.join(__dir__, "../../../unity/builds/ios/UnityFramework.xcframework"))
+    s.vendored_frameworks = ["ios/UnityFramework.xcframework"]
+  else
+    s.vendored_frameworks = ["ios/UnityFramework.framework"]
+  end
 end

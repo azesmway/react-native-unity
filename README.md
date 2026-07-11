@@ -201,3 +201,29 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 # License
 
 MIT
+
+## iOS Simulator support (optional)
+
+The classic setup vendors a device-only `UnityFramework.framework`, which is why the
+support table lists the iOS Simulator as unsupported: simulator builds fail to link the
+device-arm64 dylib. Unity itself can target the simulator — pack both slices into an
+XCFramework and the plugin picks it up automatically:
+
+1. In Unity, export the iOS project twice: once with **Target SDK: Device SDK** and once
+   with **Target SDK: Simulator SDK** (Player Settings → iOS → Target SDK).
+2. Build `UnityFramework` from each export and create the XCFramework:
+
+```sh
+xcodebuild -project device-export/Unity-iPhone.xcodeproj -scheme UnityFramework \
+  -configuration Release -sdk iphoneos BUILD_DIR="$PWD/device-build" build
+xcodebuild -project simulator-export/Unity-iPhone.xcodeproj -scheme UnityFramework \
+  -configuration Release -sdk iphonesimulator BUILD_DIR="$PWD/simulator-build" build
+xcodebuild -create-xcframework \
+  -framework device-build/Release-iphoneos/UnityFramework.framework \
+  -framework simulator-build/Release-iphonesimulator/UnityFramework.framework \
+  -output <YOUR_RN_PROJECT>/unity/builds/ios/UnityFramework.xcframework
+```
+
+3. Reinstall pods. The App Store build is unaffected: Xcode links only the device slice,
+   so the shipped app size does not change.
+
