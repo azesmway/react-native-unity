@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTBubblingEventBlock _Nullable onPlayerQuit;
 
 - (void)unloadUnity;
-- (void)pauseUnity:(BOOL * _Nonnull)pause;
+- (void)pauseUnity:(BOOL)pause;
 - (void)postMessage:(NSString* _Nonnull )gameObject methodName:(NSString* _Nonnull)methodName message:(NSString* _Nonnull) message;
 
 @end
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTBubblingEventBlock _Nullable onPlayerQuit;
 
 - (void)unloadUnity;
-- (void)pauseUnity:(BOOL * _Nonnull)pause;
+- (void)pauseUnity:(BOOL)pause;
 - (void)postMessage:(NSString* _Nonnull )gameObject methodName:(NSString* _Nonnull)methodName message:(NSString* _Nonnull) message;
 
 

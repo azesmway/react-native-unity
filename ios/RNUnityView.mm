@@ -90,7 +90,7 @@ static RNUnityView *sharedInstance;
    }
 }
 
-- (void)pauseUnity:(BOOL * _Nonnull)pause {
+- (void)pauseUnity:(BOOL)pause {
     if([self unityIsInitialized]) {
         [[self ufw] pause:pause];
     }

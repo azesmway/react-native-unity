@@ -45,14 +45,14 @@ RCT_EXPORT_METHOD(postMessage:(nonnull NSNumber*) reactTag gameObject:(NSString*
     }];
 }
 
-RCT_EXPORT_METHOD(pauseUnity:(nonnull NSNumber*) reactTag pause:(BOOL * _Nonnull)pause) {
+RCT_EXPORT_METHOD(pauseUnity:(nonnull NSNumber*) reactTag pause:(BOOL)pause) {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
        RNUnityView *view = (RNUnityView*) viewRegistry[reactTag];
        if (!view || ![view isKindOfClass:[RNUnityView class]]) {
            RCTLogError(@"Cannot find NativeView with tag #%@", reactTag);
            return;
        }
-       [unity pauseUnity:(BOOL * _Nonnull)pause];
+       [unity pauseUnity:pause];
    }];
 }
 
@@ -63,7 +63,7 @@ RCT_EXPORT_METHOD(resumeUnity:(nonnull NSNumber*) reactTag) {
            RCTLogError(@"Cannot find NativeView with tag #%@", reactTag);
            return;
        }
-       [unity pauseUnity:(BOOL * _Nonnull)false];
+       [unity pauseUnity:NO];
    }];
 }
 
