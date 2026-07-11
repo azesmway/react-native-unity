@@ -157,15 +157,11 @@ static RNUnityView *sharedInstance;
 - (void)prepareForRecycle {
     [super prepareForRecycle];
 
+    // Unity-as-a-Library is a single instance per process: unloading it on Fabric view
+    // recycling kills the engine, and any later mount shows a black screen (#180).
+    // Pause instead — the next mount resumes the same instance.
     if ([self unityIsInitialized]) {
-      [[self ufw] unloadApplication];
-
-      NSArray *viewsToRemove = self.subviews;
-      for (UIView *v in viewsToRemove) {
-          [v removeFromSuperview];
-      }
-
-      [self setUfw:nil];
+      [[self ufw] pause:true];
     }
 }
 
