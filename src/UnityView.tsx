@@ -8,7 +8,7 @@ type UnityViewContentUpdateEvent = Readonly<{
   message: string;
 }>;
 
-type RNUnityViewProps = {
+type RNUnityViewProps = ViewProps & {
   androidKeepPlayerMounted?: boolean;
   fullScreen?: boolean;
   onUnityMessage?: DirectEventHandler<UnityViewContentUpdateEvent>;
