@@ -84,9 +84,22 @@ static RNUnityView *sharedInstance;
 - (void)layoutSubviews {
    [super layoutSubviews];
 
-   if([self unityIsInitialized]) {
+   // Under Fabric, updateProps: is not reliably dispatched on the initial mount, so Unity
+   // must also be initialized from layoutSubviews or it may never start (#174, #175).
+   if(![self unityIsInitialized]) {
+      [self initUnityModule];
+   }
+
+   if([self unityIsInitialized] && self.ufw.appController.rootView != nil) {
       self.ufw.appController.rootView.frame = self.bounds;
       [self addSubview:self.ufw.appController.rootView];
+   } else {
+      // Unity boots asynchronously: when the view mounts once at app start (persistent-host
+      // setups), the engine finishes booting AFTER the last layout pass and nobody attaches
+      // its root view — the screen stays black while the game runs. Retry until it exists.
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+         [self setNeedsLayout];
+      });
    }
 }
 
