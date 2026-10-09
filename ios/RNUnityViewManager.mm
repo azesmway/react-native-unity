@@ -17,7 +17,7 @@ RNUnityView *unity;
 
 - (UIView *)view {
     unity = [[RNUnityView alloc] init];
-    UIWindow * main = [[[UIApplication sharedApplication] delegate] window];
+    UIWindow * main = RNUnityHostWindow(nil, nil);
 
     if(main != nil) {
         [main makeKeyAndVisible];

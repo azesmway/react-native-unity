@@ -32,6 +32,44 @@ UnityFramework* UnityFrameworkLoad() {
     return ufw;
 }
 
+UIWindow* RNUnityHostWindow(UIView* view, UIWindow* exclude) {
+    if (view.window != nil && view.window != exclude) {
+        return view.window;
+    }
+
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
+            // Foreground-inactive still counts: unload can arrive while a system overlay is up.
+            if (scene.activationState == UISceneActivationStateUnattached ||
+                scene.activationState == UISceneActivationStateBackground ||
+                ![scene isKindOfClass:[UIWindowScene class]]) {
+                continue;
+            }
+
+            id<UISceneDelegate> sceneDelegate = scene.delegate;
+            if ([sceneDelegate respondsToSelector:@selector(window)]) {
+                UIWindow *window = [(id<UIWindowSceneDelegate>)sceneDelegate window];
+                if (window != nil && window != exclude) {
+                    return window;
+                }
+            }
+
+            for (UIWindow *window in ((UIWindowScene *)scene).windows) {
+                if (window.isKeyWindow && window != exclude) {
+                    return window;
+                }
+            }
+        }
+    }
+
+    id<UIApplicationDelegate> appDelegate = [[UIApplication sharedApplication] delegate];
+    if ([appDelegate respondsToSelector:@selector(window)] && appDelegate.window != exclude) {
+        return appDelegate.window;
+    }
+
+    return nil;
+}
+
 @implementation RNUnityView {
     // YES once the Fabric view paused Unity for recycling, so we know to resume
     // the shared instance when the view comes back on screen (#180).
@@ -134,13 +172,15 @@ NSDictionary* appLaunchOpts;
 - (void)unloadUnity {
     _unloaded = YES;
     _pausedForRecycle = NO;
-    UIWindow * main = [[[UIApplication sharedApplication] delegate] window];
+    UIWindow * unityWindow = [self unityIsInitialized] ? [[[self ufw] appController] window] : nil;
+    UIWindow * main = RNUnityHostWindow(self, unityWindow);
     if(main != nil) {
         [main makeKeyAndVisible];
+    }
 
-        if([self unityIsInitialized]) {
-            [[self ufw] unloadApplication];
-        }
+    // Unload even without a host window: skipping it silently leaves the engine resident.
+    if([self unityIsInitialized]) {
+        [[self ufw] unloadApplication];
     }
 }
 
@@ -201,6 +241,10 @@ NSDictionary* appLaunchOpts;
       [[self ufw] pause:true];
       _pausedForRecycle = YES;
     }
+
+    // <UnityView> calls unloadUnity on unmount. The recycled instance serves the next
+    // mount, so clear the teardown latch or layoutSubviews never starts Unity again.
+    _unloaded = NO;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider {

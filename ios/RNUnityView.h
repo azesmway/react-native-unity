@@ -1,7 +1,12 @@
 #import <React/RCTView.h>
 #import <React/RCTEventDispatcher.h>
+#import <UIKit/UIKit.h>
 #include <UnityFramework/UnityFramework.h>
 #include <UnityFramework/NativeCallProxy.h>
+
+// The host app's window. Under the UIScene life cycle (required by the iOS 27 SDK,
+// default in Expo SDK 58) the app delegate owns no window, so `delegate.window` is nil.
+FOUNDATION_EXTERN UIWindow * _Nullable RNUnityHostWindow(UIView * _Nullable view, UIWindow * _Nullable exclude);
 
 // This guard prevent this file to be compiled in the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
